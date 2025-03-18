@@ -17,6 +17,7 @@ to setup
     set pollen 0
     move-to one-of patches with [not any? plants-here ]
     hatch-bees bees-per-hive[
+      set size 0.5
       set home-hive myself
       set shape "bug"
       set pollen 0
@@ -30,7 +31,7 @@ to setup
 
   create-plants number-plants[
     set shape "flower"
-    set pollen max-flower-pollen
+    set pollen 0
     set max-pollen max-flower-pollen
     set color yellow
     move-to one-of patches with [not any? plants-here ]
@@ -143,12 +144,15 @@ to grow
       set pollen pollen + 1
     ]
   ]
+  if pollen = max-pollen[
+    die
+  ]
   set label pollen
 end
 
 to reproduce
   if bees-per-hive > bee-count[
-    if pollen < pollen-to-reproduce[
+    if pollen > pollen-to-reproduce[
       set pollen pollen - pollen-to-reproduce
       set bee-count bee-count + 1
        hatch-bees 1[
@@ -190,8 +194,8 @@ GRAPHICS-WINDOW
 16
 -16
 16
-0
-0
+1
+1
 1
 ticks
 30.0
@@ -205,7 +209,7 @@ number-hives
 number-hives
 0
 50
-6.0
+0.0
 1
 1
 NIL
@@ -295,7 +299,7 @@ bee-life-span
 bee-life-span
 100
 10000
-100.0
+2800.0
 100
 1
 NIL
@@ -325,7 +329,7 @@ pollen-to-reproduce
 pollen-to-reproduce
 0
 1000
-1000.0
+250.0
 50
 1
 NIL
@@ -374,7 +378,7 @@ max-flower-pollen
 max-flower-pollen
 0
 100
-55.0
+10.0
 1
 1
 NIL
@@ -406,7 +410,7 @@ max-bee-pollen
 max-bee-pollen
 0
 100
-50.0
+20.0
 5
 1
 NIL
