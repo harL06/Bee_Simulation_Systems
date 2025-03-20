@@ -55,6 +55,16 @@ to go
   tick
 end
 
+to urbanise
+  ask plants [
+    if pxcor < 0 [
+      die
+    ]
+  ]
+end
+
+
+
 to move
   set label pollen
   ifelse movement-mode = "wander"[
@@ -201,10 +211,10 @@ ticks
 30.0
 
 SLIDER
-5
-59
-177
-92
+7
+112
+179
+145
 number-hives
 number-hives
 0
@@ -216,10 +226,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-5
-102
-177
-135
+7
+155
+179
+188
 bees-per-hive
 bees-per-hive
 1
@@ -231,10 +241,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-6
-143
-178
-176
+8
+196
+180
+229
 bee-energy
 bee-energy
 0
@@ -246,10 +256,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-7
-237
-179
-270
+9
+290
+181
+323
 number-plants
 number-plants
 1
@@ -261,10 +271,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-5
-186
-179
-219
+7
+239
+181
+272
 starting-bees-per-hive
 starting-bees-per-hive
 0
@@ -276,10 +286,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-4
-289
-176
-322
+6
+342
+178
+375
 bee-energy-to-search
 bee-energy-to-search
 1
@@ -291,10 +301,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-1
-336
-173
-369
+3
+389
+175
+422
 bee-life-span
 bee-life-span
 100
@@ -306,10 +316,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-4
-385
-176
-418
+6
+438
+178
+471
 plant-growth-rate
 plant-growth-rate
 0
@@ -321,10 +331,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-7
-437
-179
-470
+9
+490
+181
+523
 pollen-to-reproduce
 pollen-to-reproduce
 0
@@ -353,10 +363,10 @@ NIL
 1
 
 BUTTON
-68
-14
-131
-47
+3
+54
+66
+87
 NIL
 go
 T
@@ -370,10 +380,10 @@ NIL
 1
 
 SLIDER
-11
-480
-183
-513
+13
+533
+185
+566
 max-flower-pollen
 max-flower-pollen
 0
@@ -385,10 +395,10 @@ NIL
 HORIZONTAL
 
 BUTTON
-131
-13
-194
-46
+70
+56
+133
+89
 step
 go
 NIL
@@ -402,10 +412,10 @@ NIL
 1
 
 SLIDER
-9
-529
-181
-562
+11
+582
+183
+615
 max-bee-pollen
 max-bee-pollen
 0
@@ -469,6 +479,23 @@ false
 "" ""
 PENS
 "default" 1.0 0 -16777216 true "" "plot count bees"
+
+BUTTON
+75
+16
+155
+49
+NIL
+Urbanise
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
