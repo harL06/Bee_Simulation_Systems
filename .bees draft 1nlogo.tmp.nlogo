@@ -9,7 +9,8 @@ plants-own [ pollen max-pollen]
 
 to setup
   clear-all
-  ask patches [ set pcolor rgb 6 74 43 ]  ; Set all patches to green
+
+  ask patches [ set pcolor green ]  ; Set all patches to green
   create-hives number-hives[
     set shape "house"
     set max-bees bees-per-hive
