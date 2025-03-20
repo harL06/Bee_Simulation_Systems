@@ -25,7 +25,7 @@ to setup
       move-to myself
       set movement-mode "wander"
       set energy bee-energy
-      set age 0
+      set age bee-life-span / 10 * random-float 1
     ]
   ]
 
@@ -174,13 +174,13 @@ to hive-display
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-244
+198
 10
-1054
-821
+720
+533
 -1
 -1
-24.30303030303031
+15.6
 1
 10
 1
@@ -209,7 +209,7 @@ number-hives
 number-hives
 0
 50
-0.0
+5.0
 1
 1
 NIL
@@ -254,7 +254,7 @@ number-plants
 number-plants
 1
 50
-25.0
+48.0
 1
 1
 NIL
@@ -299,7 +299,7 @@ bee-life-span
 bee-life-span
 100
 10000
-2800.0
+900.0
 100
 1
 NIL
@@ -329,7 +329,7 @@ pollen-to-reproduce
 pollen-to-reproduce
 0
 1000
-250.0
+100.0
 50
 1
 NIL
@@ -415,6 +415,60 @@ max-bee-pollen
 1
 NIL
 HORIZONTAL
+
+PLOT
+727
+10
+1267
+160
+pollen per hive
+ticks
+Pollen
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "" "if count hives > 0 [\n    plot (sum [pollen] of hives) / count hives\n]"
+
+PLOT
+724
+169
+1272
+319
+Plants 
+ticks
+plants
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "" "plot count plants"
+
+PLOT
+725
+331
+1274
+481
+Bees
+ticks
+bees
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "" "plot count bees"
 
 @#$#@#$#@
 ## WHAT IS IT?
