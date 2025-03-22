@@ -1,14 +1,17 @@
 breed [bees bee]
-bees-own [ pollen max-pollen movement-mode energy home-hive age]
+bees-own [ pollen max-pollen movement-mode energy home-hive age life-span]
 
 breed [hives hive]
 hives-own [ max-bees pollen bee-count]
 
 breed [plants plant]
-plants-own [ pollen max-pollen]
+plants-own [ pollen max-pollen age life-span]
+
+globals [ reproduction-radius]
 
 to setup
   clear-all
+  set reproduction-radius 25  ;
   ask patches [ set pcolor rgb 6 74 43 ]  ; Set all patches to green
   create-hives number-hives[
     set shape "house"
@@ -26,13 +29,16 @@ to setup
       move-to myself
       set movement-mode "wander"
       set energy bee-energy
-      set age bee-life-span / 10 * random-float 1
+      set age 0
+      set life-span bee-life-span * (1 + (random-float 0.2 - 0.1))  ; ±10% variation
     ]
   ]
 
   create-plants number-plants[
     set shape "flower"
     set pollen 0
+    set age 0
+    set life-span plant-life-span * (1 + (random-float 0.2 - 0.1))
     set max-pollen max-flower-pollen
     set color yellow
     move-to one-of patches with [not any? plants-here ]
@@ -87,8 +93,25 @@ to move
             set pollen pollen + 1
             ask plants-here [
               set pollen pollen - 1
-            ]
-          ]
+
+              if random-float 1 < plant-reproduction-probability [
+                  let candidate-patches patches in-radius 3 with [ pcolor != grey and not any? plants-here and not any? hives-here ]
+                  if any? candidate-patches [
+                    hatch-plants 1 [
+                      set age 0
+                      set pollen 0
+                      set max-pollen max-flower-pollen
+                      set life-span plant-life-span * (1 + (random-float 0.2 - 0.1)) ; ±10% variation
+                      set color yellow
+                      move-to one-of candidate-patches
+                    ]
+                  ]
+                  ]
+              ]
+             ]
+
+
+
           [
             set movement-mode "home"
           ]
@@ -125,9 +148,12 @@ end
 
 to age-up
   set age age + 1
-  if age > bee-life-span[
+  if age > life-span[
     ask home-hive[
+      ifelse bee-count > 0 [
       set bee-count bee-count - 1
+      ]
+      [set bee-count 0]
     ]
     die
   ]
@@ -151,21 +177,24 @@ to-report best-plant
 end
 
 to grow
+  set age age + 1
+  if age > life-span [ die ]
   if pollen < max-pollen[
     if (random-float 1) < plant-growth-rate[
       set pollen pollen + 1
     ]
   ]
-  if pollen = max-pollen[
-    die
-  ]
+;  if pollen = max-pollen[
+;    die
+;  ]
   set label pollen
 end
 
 to reproduce
-  if bees-per-hive > bee-count[
-    if pollen > pollen-to-reproduce[
-      set pollen pollen - pollen-to-reproduce
+  if bee-count < bees-per-hive and bee-count > 0 [
+    let reproduction-chance pollen / pollen-to-reproduce  ; Higher pollen = higher chance
+    if random-float 1 < reproduction-chance[
+      set pollen max (list 0 (pollen - (pollen-to-reproduce / reproduction-chance))) ; Scales the pollen cost dynamically based on how likely reproduction is.
       set bee-count bee-count + 1
        hatch-bees 1[
         set home-hive myself
@@ -176,6 +205,7 @@ to reproduce
         set movement-mode "wander"
         set energy bee-energy
         set age 0
+        set life-span bee-life-span * (1 + (random-float 0.2 - 0.1))  ; Randomised lifespan
       ]
     ]
   ]
@@ -236,7 +266,7 @@ bees-per-hive
 bees-per-hive
 1
 10
-3.0
+6.0
 1
 1
 NIL
@@ -296,7 +326,7 @@ bee-energy-to-search
 bee-energy-to-search
 1
 100
-25.0
+19.0
 2
 1
 NIL
@@ -310,9 +340,9 @@ SLIDER
 bee-life-span
 bee-life-span
 100
-10000
-900.0
-100
+1000
+550.0
+50
 1
 NIL
 HORIZONTAL
@@ -326,7 +356,7 @@ plant-growth-rate
 plant-growth-rate
 0
 1
-0.04
+0.03
 0.01
 1
 NIL
@@ -341,7 +371,7 @@ pollen-to-reproduce
 pollen-to-reproduce
 0
 1000
-100.0
+550.0
 50
 1
 NIL
@@ -422,7 +452,7 @@ max-bee-pollen
 max-bee-pollen
 0
 100
-20.0
+10.0
 5
 1
 NIL
@@ -498,6 +528,36 @@ NIL
 NIL
 NIL
 1
+
+SLIDER
+10
+628
+182
+661
+plant-life-span
+plant-life-span
+100
+1000
+1000.0
+50
+1
+NIL
+HORIZONTAL
+
+SLIDER
+261
+609
+481
+642
+plant-reproduction-probability
+plant-reproduction-probability
+0
+.5
+0.04
+.01
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
