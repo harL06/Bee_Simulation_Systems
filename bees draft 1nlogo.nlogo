@@ -62,11 +62,74 @@ to go
   tick
 end
 
+
+
 to urbanise
-  ask patches with [pxcor < 0] [ set pcolor grey ]  ; Left half turns grey
-  ask plants [
-    if pxcor < 0 [
-      die
+  let target_urban_patches round (count patches * (urbanisation-rate / 50))
+
+  let cell-width world-width / 8
+  let cell-height world-height / 8
+
+  let cluster-centers []
+
+  let row 0
+  while [row < 8] [
+    let col 0
+    while [col < 8] [
+      if (row + col) mod 2 = 1 [
+        let center-x (col * cell-width) + (cell-width / 2) - (world-width / 2)
+        let center-y (row * cell-height) + (cell-height / 2) - (world-height / 2)
+
+        let center-patch min-one-of patches [distancexy center-x center-y]
+
+        set cluster-centers lput center-patch cluster-centers
+      ]
+      set col col + 1
+    ]
+    set row row + 1
+  ]
+
+  let patches_per_cluster ceiling (target_urban_patches / 32)
+
+  ask patches [set pcolor rgb 6 74 43]
+
+  foreach cluster-centers [
+    center ->
+    ask center [
+      create-center-expanding-cluster patches_per_cluster
+    ]
+  ]
+end
+
+to create-center-expanding-cluster [size_of_cluster]
+  let visited-patches (patch-set self)
+  let current-layer (patch-set self)
+  let urbanized 0
+
+  set pcolor grey
+  ask plants-here [die]
+  set urbanized urbanized + 1
+
+  while [urbanized < size_of_cluster and any? current-layer] [
+    let next-layer nobody
+    ask current-layer [
+      let my-neighbors neighbors with [not member? self visited-patches]
+      ifelse next-layer = nobody [
+        set next-layer my-neighbors
+      ] [
+        set next-layer (patch-set next-layer my-neighbors)
+      ]
+    ]
+
+    set visited-patches (patch-set visited-patches current-layer)
+    set current-layer next-layer
+
+    ask current-layer [
+      if urbanized < size_of_cluster [
+        set pcolor grey
+        ask plants-here [die]
+        set urbanized urbanized + 1
+      ]
     ]
   ]
 end
@@ -513,10 +576,10 @@ PENS
 "default" 1.0 0 -16777216 true "" "plot count bees"
 
 BUTTON
-75
-16
-155
-49
+490
+539
+570
+572
 NIL
 Urbanise
 NIL
@@ -557,6 +620,21 @@ plant-reproduction-probability
 .01
 1
 NIL
+HORIZONTAL
+
+SLIDER
+259
+539
+476
+572
+urbanisation-rate
+urbanisation-rate
+0
+50
+10.0
+2
+1
+%
 HORIZONTAL
 
 @#$#@#$#@
