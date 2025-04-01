@@ -11,16 +11,16 @@ globals [ reproduction-radius]
 
 to setup
   clear-all
-  set reproduction-radius 25  ;
+  set reproduction-radius 15  ;
   ask patches [ set pcolor rgb 6 74 43 ]  ; Set all patches to green
   create-hives number-hives[
     set shape "house"
     set max-bees bees-per-hive
-    set bee-count min (list starting-bees-per-hive bees-per-hive)
+    set bee-count starting-bees-per-hive
     set label bee-count
     set pollen 0
     move-to one-of patches with [not any? plants-here ]
-    hatch-bees bees-per-hive[
+    hatch-bees starting-bees-per-hive[
       set size 0.5
       set home-hive myself
       set shape "bug"
@@ -30,7 +30,7 @@ to setup
       set movement-mode "wander"
       set energy bee-energy
       set age 0
-      set life-span bee-life-span * (1 + (random-float 0.2 - 0.1))  ; ±10% variation
+      set life-span bee-life-span * (1 + (random-float 0.4 - 0.1))  ; ±10% variation
     ]
   ]
 
@@ -268,7 +268,7 @@ to reproduce
         set movement-mode "wander"
         set energy bee-energy
         set age 0
-        set life-span bee-life-span * (1 + (random-float 0.2 - 0.1))  ; Randomised lifespan
+        set life-span bee-life-span * (1 + (random-float 0.4 - 0.1))  ; Randomised lifespan
       ]
     ]
   ]
@@ -312,8 +312,8 @@ SLIDER
 145
 number-hives
 number-hives
-0
-50
+1
+8
 5.0
 1
 1
@@ -327,10 +327,10 @@ SLIDER
 188
 bees-per-hive
 bees-per-hive
-1
-10
-6.0
-1
+5
+30
+25.0
+5
 1
 NIL
 HORIZONTAL
@@ -342,8 +342,8 @@ SLIDER
 229
 bee-energy
 bee-energy
-0
-100
+5
+50
 30.0
 5
 1
@@ -357,25 +357,10 @@ SLIDER
 323
 number-plants
 number-plants
-1
-50
-48.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-7
-239
-181
-272
-starting-bees-per-hive
-starting-bees-per-hive
-0
-10
-3.0
-1
+30
+80
+50.0
+5
 1
 NIL
 HORIZONTAL
@@ -387,10 +372,10 @@ SLIDER
 375
 bee-energy-to-search
 bee-energy-to-search
-1
-100
-19.0
-2
+10
+50
+20.0
+5
 1
 NIL
 HORIZONTAL
@@ -402,9 +387,9 @@ SLIDER
 422
 bee-life-span
 bee-life-span
-100
-1000
-550.0
+300
+800
+400.0
 50
 1
 NIL
@@ -417,8 +402,8 @@ SLIDER
 471
 plant-growth-rate
 plant-growth-rate
-0
-1
+.01
+.05
 0.03
 0.01
 1
@@ -432,9 +417,9 @@ SLIDER
 523
 pollen-to-reproduce
 pollen-to-reproduce
-0
-1000
-550.0
+200
+800
+800.0
 50
 1
 NIL
@@ -481,9 +466,9 @@ SLIDER
 566
 max-flower-pollen
 max-flower-pollen
-0
-100
-10.0
+1
+10
+6.0
 1
 1
 NIL
@@ -513,10 +498,10 @@ SLIDER
 615
 max-bee-pollen
 max-bee-pollen
-0
-100
+1
+10
 10.0
-5
+1
 1
 NIL
 HORIZONTAL
@@ -526,8 +511,8 @@ PLOT
 10
 1267
 160
-pollen per hive
-ticks
+Average Pollen per Hive
+Time (ticks)
 Pollen
 0.0
 10.0
@@ -544,36 +529,19 @@ PLOT
 169
 1272
 319
-Plants 
-ticks
-plants
+Population
+Time (ticks)
+Population
 0.0
 10.0
 0.0
 10.0
 true
-false
-"" ""
-PENS
-"default" 1.0 0 -16777216 true "" "plot count plants"
-
-PLOT
-725
-331
-1274
-481
-Bees
-ticks
-bees
-0.0
-10.0
-0.0
-10.0
 true
-false
 "" ""
 PENS
-"default" 1.0 0 -16777216 true "" "plot count bees"
+"Plants" 1.0 0 -15040220 true "" "if count hives > 0 [\nplot count plants\n]"
+"Bees" 1.0 0 -3844592 true "" "if count hives > 0 [\nplot count bees\n]"
 
 BUTTON
 490
@@ -599,9 +567,9 @@ SLIDER
 661
 plant-life-span
 plant-life-span
-100
-1000
-1000.0
+800
+1200
+900.0
 50
 1
 NIL
@@ -631,10 +599,25 @@ urbanisation-rate
 urbanisation-rate
 0
 50
-10.0
+40.0
 2
 1
 %
+HORIZONTAL
+
+SLIDER
+7
+239
+181
+272
+starting-bees-per-hive
+starting-bees-per-hive
+3
+8
+5.0
+1
+1
+NIL
 HORIZONTAL
 
 @#$#@#$#@
