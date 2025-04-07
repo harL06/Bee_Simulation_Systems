@@ -527,8 +527,8 @@ PENS
 PLOT
 724
 169
-1272
-319
+1266
+528
 Population
 Time (ticks)
 Population
