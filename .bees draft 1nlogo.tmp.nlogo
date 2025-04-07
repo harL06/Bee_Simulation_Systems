@@ -60,16 +60,7 @@ to go
     reproduce
   ]
 
-  update-bee-count
-
   tick
-end
-
-to update-bee-count
-  ask hives [
-    set bee-count count bees with [home-hive = myself]
-    hive-display  ; update the label to reflect the new count
-  ]
 end
 
 
@@ -609,7 +600,7 @@ urbanisation-rate
 urbanisation-rate
 0
 50
-46.0
+44.0
 2
 1
 %
