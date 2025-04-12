@@ -30,7 +30,7 @@ to setup
       set movement-mode "wander"
       set energy bee-energy
       set age 0
-      set life-span bee-life-span * (1 + (random-float 0.4 - 0.1))  ; ±10% variation
+      set life-span bee-life-span * (1 + (random-float 0.4 - 0.1))  ; ±0% variation
     ]
   ]
 
@@ -60,7 +60,16 @@ to go
     reproduce
   ]
 
+  update-bee-count
+
   tick
+end
+
+to update-bee-count
+  ask hives [
+    set bee-count count bees with [home-hive = myself]
+    hive-display  ; update the label to reflect the new count
+  ]
 end
 
 
@@ -360,7 +369,7 @@ number-plants
 number-plants
 30
 80
-50.0
+80.0
 5
 1
 NIL
@@ -600,7 +609,7 @@ urbanisation-rate
 urbanisation-rate
 0
 50
-44.0
+50.0
 2
 1
 %

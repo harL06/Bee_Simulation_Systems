@@ -369,7 +369,7 @@ number-plants
 number-plants
 30
 80
-50.0
+80.0
 5
 1
 NIL
@@ -609,7 +609,7 @@ urbanisation-rate
 urbanisation-rate
 0
 50
-46.0
+50.0
 2
 1
 %
